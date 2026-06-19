@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Firki Help</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Source+Sans+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Source Sans Pro', sans-serif;
+    background: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  .widget {
+    width: 100%;
+    max-width: 420px;
+    background: #fff;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+  }
+
+  /* Header */
+  .header {
+    background: #00B3C8;
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .header-avatar {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.25);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    font-size: 22px;
+  }
+  .header-text h1 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 20px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: #fff;
+    line-height: 1.1;
+  }
+  .header-text p { font-size: 13px; color: rgba(255,255,255,0.85); margin-top: 2px; }
+  .header-status {
+    margin-left: auto;
+    display: flex; align-items: center; gap: 5px;
+    font-size: 12px; color: rgba(255,255,255,0.9); flex-shrink: 0;
+  }
+  .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #5CC09F; }
+
+  /* Chat body */
+  .chat-body {
+    background: #F2F1E2;
+    padding: 18px 16px 12px;
+    min-height: 300px;
+    max-height: 520px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .bubble-bot {
+    background: #fff;
+    border-radius: 16px;
+    border-bottom-left-radius: 4px;
+    padding: 14px 16px;
+    border: 0.5px solid #e0dfce;
+    font-size: 14px; color: #30302F; line-height: 1.55;
+  }
+  .bubble-bot strong { font-weight: 700; display: block; margin-bottom: 4px; font-size: 15px; }
+
+  .bubble-user {
+    background: #00B3C8;
+    color: #fff;
+    border-radius: 16px;
+    border-bottom-right-radius: 4px;
+    padding: 12px 16px;
+    font-size: 14px; line-height: 1.5;
+    align-self: flex-end;
+    max-width: 85%;
+  }
+
+  .bubble-answer {
+    background: #fff;
+    border-radius: 16px;
+    border-bottom-left-radius: 4px;
+    padding: 16px;
+    border: 0.5px solid #e0dfce;
+    font-size: 14px; color: #30302F; line-height: 1.6;
+  }
+  .bubble-answer .ans-title {
+    font-weight: 700; font-size: 15px; color: #00B3C8;
+    margin-bottom: 10px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .bubble-answer ol { padding-left: 18px; display: flex; flex-direction: column; gap: 6px; }
+  .bubble-answer ol li { font-size: 13.5px; color: #444; }
+
+  /* Typing indicator */
+  .bubble-typing {
+    background: #fff;
+    border-radius: 16px;
+    border-bottom-left-radius: 4px;
+    padding: 14px 16px;
+    border: 0.5px solid #e0dfce;
+    display: flex; align-items: center; gap: 5px;
+    width: fit-content;
+  }
+  .typing-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: #00B3C8; opacity: 0.4;
+    animation: blink 1.2s infinite;
+  }
+  .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+  .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes blink { 0%,80%,100% { opacity:0.2; transform:scale(1); } 40% { opacity:1; transform:scale(1.2); } }
+
+  /* Subtle "still need help" footer */
+  .still-help {
+    font-size: 12px;
+    color: #30302F;
+    text-align: center;
+    padding: 2px 4px;
+    line-height: 1.6;
+  }
+  .still-help a {
+    color: #30302F;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    transition: color 0.15s;
+  }
+  .still-help a:hover { color: #00B3C8; }
+
+  /* Options */
+  .options-label {
+    font-size: 11px; font-weight: 700; color: #999;
+    text-transform: uppercase; letter-spacing: 0.7px; margin-bottom: -4px;
+  }
+  .options-list { display: flex; flex-direction: column; gap: 8px; }
+  .opt-btn {
+    background: #fff;
+    border: 1.5px solid #e0dfce;
+    border-radius: 12px;
+    padding: 12px 14px;
+    display: flex; align-items: center; gap: 12px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    text-align: left; width: 100%;
+  }
+  .opt-btn:hover { border-color: #00B3C8; background: #f0fafc; }
+  .opt-icon {
+    width: 36px; height: 36px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+  }
+  .opt-text strong { display: block; font-size: 13.5px; font-weight: 700; color: #30302F; margin-bottom: 2px; }
+  .opt-text span { font-size: 12px; color: #999; }
+  .opt-arrow { margin-left: auto; color: #00B3C8; font-size: 18px; flex-shrink: 0; }
+
+  /* Back button */
+  .back-btn {
+    background: none;
+    border: 1.5px solid #ccc;
+    border-radius: 24px;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-family: 'Source Sans Pro', sans-serif;
+    color: #666; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 6px;
+    transition: border-color 0.15s, color 0.15s;
+    align-self: flex-start;
+  }
+  .back-btn:hover { border-color: #00B3C8; color: #00B3C8; }
+
+  /* Input row */
+  .input-row {
+    display: flex; gap: 8px;
+    padding: 12px 16px 14px;
+    background: #fff;
+    border-top: 0.5px solid #e0dfce;
+  }
+  .input-row input {
+    flex: 1;
+    border: 1.5px solid #e0dfce;
+    border-radius: 24px;
+    padding: 10px 16px;
+    font-size: 14px;
+    font-family: 'Source Sans Pro', sans-serif;
+    color: #30302F; outline: none;
+    background: #f9f9f6;
+    transition: border-color 0.15s;
+  }
+  .input-row input:focus { border-color: #00B3C8; }
+  .input-row input::placeholder { color: #bbb; }
+  .send-btn {
+    width: 42px; height: 42px;
+    border-radius: 50%;
+    background: #00B3C8;
+    border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.15s;
+  }
+  .send-btn:hover { background: #009ab0; }
+  .send-btn svg { width: 18px; height: 18px; fill: white; }
+</style>
+</head>
+<body>
+
+<div class="widget">
+
+  <div class="header">
+    <div class="header-avatar">🎓</div>
+    <div class="header-text">
+      <h1>Firki Help</h1>
+      <p>We're here to help you</p>
+    </div>
+    <div class="header-status">
+      <div class="status-dot"></div>
+      Online
+    </div>
+  </div>
+
+  <div class="chat-body" id="chatBody">
+    <div class="bubble-bot">
+      <strong>👋 Hi! Sorry to hear you're having trouble.</strong>
+      What are you having trouble with? Tap one of the options below, or type your question.
+    </div>
+    <div class="options-label">Common questions</div>
+    <div class="options-list" id="optionsList">
+      <button class="opt-btn" onclick="showAnswer('login')">
+        <div class="opt-icon" style="background:#fff3cd;">🔐</div>
+        <div class="opt-text"><strong>I can't log in</strong><span>Login or password issues</span></div>
+        <span class="opt-arrow">›</span>
+      </button>
+      <button class="opt-btn" onclick="showAnswer('certificate')">
+        <div class="opt-icon" style="background:#d4f5ec;">🎓</div>
+        <div class="opt-text"><strong>I can't find my certificate</strong><span>Download or view your certificate</span></div>
+        <span class="opt-arrow">›</span>
+      </button>
+      <button class="opt-btn" onclick="showAnswer('free')">
+        <div class="opt-icon" style="background:#e0f4f7;">📚</div>
+        <div class="opt-text"><strong>Are Firki courses free?</strong><span>Pricing and access questions</span></div>
+        <span class="opt-arrow">›</span>
+      </button>
+      <button class="opt-btn" onclick="showAnswer('other')">
+        <div class="opt-icon" style="background:#fde8e6;">🙋</div>
+        <div class="opt-text"><strong>Something else</strong><span>Any other issue</span></div>
+        <span class="opt-arrow">›</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="input-row">
+    <input type="text" id="textInput" placeholder="Type your question here…" onkeydown="handleKey(event)" />
+    <button class="send-btn" onclick="handleSend()" aria-label="Send">
+      <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
+    </button>
+  </div>
+
+</div>
+
+<script>
+  // Replace with your actual Google Form link
+  const SUPPORT_FORM_URL = "https://forms.google.com/your-form-link-here";
+
+  // Full FAQ knowledge base — used as context for the AI
+  const FAQ_CONTEXT = `
+FIRKI SUPPORT FAQ
+
+LOGIN & ACCESS
+Q: I am not able to log in
+A: No worries — this happens sometimes! Try logging in with an OTP sent to your mobile number.
+Steps: 1. Go to the Firki login page. 2. Look for the option to log in with OTP. 3. Enter your registered mobile number. 4. You will receive a one-time password on your phone. 5. Enter the OTP to log in. 6. If the OTP option does not work, please fill in our support form to raise an issue.
+
+Q: Is Firki paid?
+A: Great news — Firki is completely free! There is nothing to pay, ever.
+Steps: 1. Log in to Firki or create your account if you do not have one yet. 2. Browse courses, programmes, and resources available on the platform. 3. Start learning without any payment requirement.
+
+PROFILE & ACCOUNT
+Q: How do I change my mobile number?
+A: You can update your mobile number and most other details from your profile — it only takes a moment.
+Steps: 1. Log in to Firki. 2. Go to your Profile. 3. Click Edit profile. 4. Update your mobile number in the relevant field. 5. You can also update other details such as your name and location from this page. 6. Save your changes. Note: Your email address and username cannot be changed.
+
+NAVIGATION & FINDING CONTENT
+Q: How do I find a new course?
+A: There are so many great courses waiting for you! Here is how to browse and find one that fits.
+Steps: 1. Log in to Firki. 2. Click Courses in the bottom navigation. 3. Use the Type to search bar to search for a course or topic. 4. Use Filter to narrow the list. 5. Browse courses in grid or list view. 6. Use Prev and Next to see more courses. 7. Click Programs to explore live programmes that include Zoom sessions with a facilitator. 8. On My Learning, scroll to All Recommendations for suggested courses and resources.
+
+Q: Where do I find my courses? / Where is my last accessed course?
+A: Your courses are always easy to find in My Learning.
+Steps: 1. Log in to Firki. 2. Click My Learning to see the courses you are already enrolled in. 3. Your most recently accessed courses will appear at the top. 4. Click Courses to browse the full course catalogue. 5. Use search or filters to find the course you want. 6. If you are looking for live learning with a facilitator, click Programs.
+
+Q: What is the difference between a course and a programme?
+A: Both are great ways to learn, but they work a little differently.
+Steps: 1. A course is self-paced — you can complete it whenever it suits you. 2. A programme is live and usually includes Zoom sessions with a facilitator. 3. Click Courses in the bottom navigation to explore self-paced options. 4. Click Programs to explore live learning opportunities. 5. If you join a programme, check the programme details for the Zoom link and session schedule.
+
+Q: I want the link to join my session
+A: Your session link is inside the relevant programme — here is how to find it.
+Steps: 1. Log in to Firki. 2. Go to My Learning or Programs and open the relevant learning item. 3. Scroll to the session-related section, such as Webinar. 4. Click the session activity — for example, 1-1 Catch up. 5. Open the link or use the meeting details shown there.
+
+ENROLMENT & COURSES
+Q: Can I enrol myself in courses?
+A: Yes! Most courses on Firki are open for self-enrolment. Just find the one you want and get started.
+Steps: 1. Log in to Firki. 2. Go to Courses from the bottom navigation. 3. Use search or filters to find the course you want. 4. Look for courses available for self-enrolment. 5. Open the course and follow the enrolment option shown on the page. 6. If a course requires a special link, use the enrolment link shared with you.
+
+Q: I am not able to proceed in my course
+A: If you are stuck in a course, there is usually a simple fix — check for any activity you may have missed.
+Steps: 1. Log in to Firki. 2. Go to My Learning. 3. Open the course you are trying to complete. 4. Look for any activity marked To do. 5. Open that activity and complete it fully. 6. Follow the instructions shown on the page. 7. Return to the course outline and check whether the activity changes to Done. 8. Continue to the next activity.
+
+CERTIFICATES
+Q: Where can I find my certificate?
+A: You have earned it — here is where to find it!
+Steps: 1. Log in to Firki. 2. On the Dashboard, click the Certificates tile. 3. This opens the My certificates page. 4. If your certificate has been issued, it will appear there. 5. You can also go to My Learning, open your course, scroll to the Certificate section, and click the Certificate activity. 6. Click View certificate.
+
+Q: Do I get certificates for all courses?
+A: Yes! You will receive a certificate for every course once you complete all the required activities.
+Steps: 1. Log in to Firki. 2. Open the course you are enrolled in. 3. Complete all required course activities. 4. Go to the Certificate section in the course or check the Certificates tile on your Dashboard. 5. View or download your certificate once it is available.
+
+GETTING HELP
+Q: How do I contact Firki support?
+A: We are always here for you. Reach out through our support form or drop us an email — we will get back to you within 2 working days.
+Steps: 1. Fill in our support form. 2. Or email us at support@firki.co. 3. We will get back to you within 2 working days.
+  `;
+
+  // Pre-defined answers for the quick-tap buttons
+  const faqs = {
+    login: {
+      icon: '🔐',
+      label: "I can't log in",
+      answer: "No worries — this happens sometimes! Try logging in with an OTP sent to your mobile number.",
+      steps: ["Go to the Firki login page.", "Look for the option to log in with OTP.", "Enter your registered mobile number.", "You will receive a one-time password on your phone.", "Enter the OTP to log in.", "If the OTP option does not work, please fill in our support form to raise an issue."]
+    },
+    certificate: {
+      icon: '🎓',
+      label: "I can't find my certificate",
+      answer: "You have earned it — here is where to find it!",
+      steps: ["Log in to Firki.", "On the Dashboard, click the Certificates tile.", "This opens the My certificates page.", "If your certificate has been issued, it will appear there.", "You can also go to My Learning, open your course, scroll to the Certificate section, and click the Certificate activity.", "Click View certificate."]
+    },
+    free: {
+      icon: '📚',
+      label: "Are Firki courses free?",
+      answer: "Great news — Firki is completely free! There is nothing to pay, ever.",
+      steps: ["Log in to Firki or create your account if you do not have one yet.", "Browse courses, programmes, and resources available on the platform.", "Start learning without any payment requirement."]
+    },
+    other: {
+      icon: '🙋',
+      label: "Something else",
+      answer: "We are always here for you! Reach us through our support form or email us at support@firki.co.",
+      steps: ["Fill in our support form using the link below.", "Or email us at support@firki.co.", "We will get back to you within 2 working days."]
+    }
+  };
+
+  function removeOptions() {
+    const opts = document.getElementById('optionsList');
+    if (opts) opts.remove();
+    const lbl = document.querySelector('.options-label');
+    if (lbl) lbl.remove();
+  }
+
+  function appendStillHelp(chatBody) {
+    const hint = document.createElement('div');
+    hint.className = 'still-help';
+    hint.innerHTML = `Still not resolved? <a href="${SUPPORT_FORM_URL}" target="_blank">fill our support form</a> and we'll get back to you.`;
+    chatBody.appendChild(hint);
+  }
+
+  function appendBackBtn(chatBody) {
+    const btn = document.createElement('button');
+    btn.className = 'back-btn';
+    btn.innerHTML = '← Back to all questions';
+    btn.onclick = resetChat;
+    chatBody.appendChild(btn);
+  }
+
+  function showAnswer(key) {
+    const faq = faqs[key];
+    const chatBody = document.getElementById('chatBody');
+    removeOptions();
+
+    const userBubble = document.createElement('div');
+    userBubble.className = 'bubble-user';
+    userBubble.textContent = faq.label;
+    chatBody.appendChild(userBubble);
+
+    const stepsHTML = faq.steps.map(s => `<li>${s}</li>`).join('');
+    const answerBubble = document.createElement('div');
+    answerBubble.className = 'bubble-answer';
+    answerBubble.innerHTML = `
+      <div class="ans-title">${faq.icon} ${faq.label}</div>
+      <p style="margin-bottom:10px; color:#444; font-size:14px;">${faq.answer}</p>
+      <ol>${stepsHTML}</ol>
+    `;
+    chatBody.appendChild(answerBubble);
+    appendStillHelp(chatBody);
+    appendBackBtn(chatBody);
+    chatBody.scrollTop = chatBody.scrollHeight;
+  }
+
+  async function handleSend() {
+    const input = document.getElementById('textInput');
+    const text = input.value.trim();
+    if (!text) return;
+
+    const chatBody = document.getElementById('chatBody');
+    removeOptions();
+
+    // User bubble
+    const userBubble = document.createElement('div');
+    userBubble.className = 'bubble-user';
+    userBubble.textContent = text;
+    chatBody.appendChild(userBubble);
+    input.value = '';
+
+    // Typing indicator
+    const typing = document.createElement('div');
+    typing.className = 'bubble-typing';
+    typing.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
+    chatBody.appendChild(typing);
+    chatBody.scrollTop = chatBody.scrollHeight;
+
+    try {
+      const response = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "claude-sonnet-4-6",
+          max_tokens: 1000,
+          system: `You are a friendly, helpful support assistant for Firki (Teach For India Online), a free professional learning platform for teachers. 
+
+Your ONLY job is to answer questions using the FAQ below. Keep answers warm, simple, and clear — teachers who are not tech-savvy will be reading this.
+
+Always respond in this exact JSON format (no extra text, no markdown, no code fences):
+{
+  "title": "short title for the answer (5 words max)",
+  "icon": "one relevant emoji",
+  "answer": "one or two friendly sentences summarising the answer",
+  "steps": ["step 1", "step 2", "step 3"]
+}
+
+If the question is not covered in the FAQ, respond with:
+{
+  "title": "We'll look into this",
+  "icon": "🙋",
+  "answer": "That's a great question! We don't have a ready answer for this one, but our support team will be happy to help.",
+  "steps": ["Fill in our support form and we'll get back to you within 2 working days.", "Or email us at support@firki.co."]
+}
+
+FAQ KNOWLEDGE BASE:
+${FAQ_CONTEXT}`,
+          messages: [{ role: "user", content: text }]
+        })
+      });
+
+      const data = await response.json();
+      const rawText = data.content.map(c => c.text || '').join('').trim();
+
+      let parsed;
+      try {
+        // Strip any accidental code fences
+        const clean = rawText.replace(/```json|```/g, '').trim();
+        parsed = JSON.parse(clean);
+      } catch(e) {
+        parsed = {
+          title: "Here's what I found",
+          icon: "💬",
+          answer: rawText,
+          steps: []
+        };
+      }
+
+      typing.remove();
+
+      const stepsHTML = (parsed.steps || []).map(s => `<li>${s}</li>`).join('');
+      const answerBubble = document.createElement('div');
+      answerBubble.className = 'bubble-answer';
+      answerBubble.innerHTML = `
+        <div class="ans-title">${parsed.icon || '💬'} ${parsed.title || 'Here\'s what I found'}</div>
+        <p style="margin-bottom:${stepsHTML ? '10px' : '0'}; color:#444; font-size:14px;">${parsed.answer}</p>
+        ${stepsHTML ? `<ol>${stepsHTML}</ol>` : ''}
+      `;
+      chatBody.appendChild(answerBubble);
+
+    } catch(err) {
+      typing.remove();
+      const errBubble = document.createElement('div');
+      errBubble.className = 'bubble-answer';
+      errBubble.innerHTML = `<div class="ans-title">😔 Something went wrong</div><p style="color:#444; font-size:14px;">Sorry, I couldn't fetch an answer right now. Please try again or use the support form below.</p>`;
+      chatBody.appendChild(errBubble);
+    }
+
+    appendStillHelp(chatBody);
+    appendBackBtn(chatBody);
+    chatBody.scrollTop = chatBody.scrollHeight;
+  }
+
+  function resetChat() {
+    const chatBody = document.getElementById('chatBody');
+    while (chatBody.children.length > 1) chatBody.removeChild(chatBody.lastChild);
+
+    const label = document.createElement('div');
+    label.className = 'options-label';
+    label.textContent = 'Common questions';
+    chatBody.appendChild(label);
+
+    const optList = document.createElement('div');
+    optList.className = 'options-list';
+    optList.id = 'optionsList';
+    optList.innerHTML = `
+      <button class="opt-btn" onclick="showAnswer('login')">
+        <div class="opt-icon" style="background:#fff3cd;">🔐</div>
+        <div class="opt-text"><strong>I can't log in</strong><span>Login or password issues</span></div>
+        <span class="opt-arrow">›</span>
+      </button>
+      <button class="opt-btn" onclick="showAnswer('certificate')">
+        <div class="opt-icon" style="background:#d4f5ec;">🎓</div>
+        <div class="opt-text"><strong>I can't find my certificate</strong><span>Download or view your certificate</span></div>
+        <span class="opt-arrow">›</span>
+      </button>
+      <button class="opt-btn" onclick="showAnswer('free')">
+        <div class="opt-icon" style="background:#e0f4f7;">📚</div>
+        <div class="opt-text"><strong>Are Firki courses free?</strong><span>Pricing and access questions</span></div>
+        <span class="opt-arrow">›</span>
+      </button>
+      <button class="opt-btn" onclick="showAnswer('other')">
+        <div class="opt-icon" style="background:#fde8e6;">🙋</div>
+        <div class="opt-text"><strong>Something else</strong><span>Any other issue</span></div>
+        <span class="opt-arrow">›</span>
+      </button>
+    `;
+    chatBody.appendChild(optList);
+    chatBody.scrollTop = 0;
+  }
+
+  function handleKey(e) { if (e.key === 'Enter') handleSend(); }
+</script>
+
+</body>
+</html>
